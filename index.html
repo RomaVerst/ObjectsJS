@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="rus">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+	<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body id="body">
+<div id="menu"></div>
+<section id="gallery"></section>
+<div id="myModal">
+	<span class="close"></span>
+</div>
+<section id="underGallery">
+	<button id="delete">Удалить Меню</button>
+</section>
+<script src="js/MenuItem.js"></script>
+<script src="js/Menu.js"></script>
+<script src="js/SubMenu.js"></script>
+<script>
+    window.onload = () => {
+        let block = document.getElementById('menu');
+
+        let menu = new Menu('my', 'my', [
+            new MenuItem('/', 'Главная'),
+			new MenuItem('/userOffice', 'Личный кабинет'),
+			new SubMenu('/catalog', 'Каталог', 'catalog', 'sub', [
+				new MenuItem('/tv', 'Телевизоры'),
+				new MenuItem('/Appliances', 'Бытовая техника'),
+				new MenuItem('/PhonesTablet', 'Телефоны и Планшеты'),
+				new MenuItem('/cameras', 'Фотоаппараты'),
+				new MenuItem('/autoPlayers', 'Автомагнитолы'),
+				new MenuItem('/PC', 'Компьютеры')
+				]),
+			new SubMenu('/aboutUs', 'О нас', 'aboutUs', 'sub', [
+				new MenuItem('/contacts', 'Наши контакты'),
+				new MenuItem('/writeUs', 'Напишите нам')
+				]),
+			new SubMenu('/servies', 'Сервисы', 'servies', 'sub', [
+				new MenuItem('/servies/ourCity', 'В нашем городе'),
+				new MenuItem('/servies/yourCity', 'В вашем городе'),
+				new MenuItem('/servies/notOurCityNotYourCity', 'Не в нашем и не в Вашем городе')
+				]),
+			new MenuItem('/stock', 'Промоакции')
+        ]);
+
+        block.innerHTML = menu.render();
+		let button = document.getElementById('delete');
+		button.addEventListener('click', () => menu.remove());
+		let blockGallery = document.getElementById('gallery');
+		fetch('gallery.json')
+			.then(result => result.json())
+			.then(data => {
+				console.log(data);
+				for(let i=0; i < data.length; i++) {
+					blockGallery.innerHTML += `<a href="${data[i].src}" target="_blank"><img src="${data[i].src}" alt="${data[i].alt}"></a>`;
+				}
+			})
+			.catch(error => {
+				blockGallery.innerHTML = error;
+			})
+    };
+	
+</script>
+</body>
+</html>
